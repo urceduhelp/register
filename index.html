@@ -1,218 +1,170 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ලියාපදිංචි වීම | ඉතිහාස ගුරු වැඩසටහන</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;700&family=Noto+Serif+Sinhala:wght@700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ලියාපදිංචි වන්න</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-  :root{
-    --bg:#eef2f3; --surface:#ffffff; --ink:#18262b; --muted:#566a71;
-    --line:#cdd8db; --accent:#0f5c6e; --accent-ink:#ffffff; --mark:#c8791a;
-    --err:#b3261e; --ok:#1d6b3a;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#0f1a1d; --surface:#172428; --ink:#e6eff1; --muted:#9bb0b6;
-      --line:#2c4047; --accent:#4fb3c9; --accent-ink:#06222a; --mark:#e8a24a;
-      --err:#ff8a80; --ok:#7fd69a;
-    }
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:"Noto Sans Sinhala",system-ui,sans-serif; line-height:1.7;
-    padding:env(safe-area-inset-top,0) 16px env(safe-area-inset-bottom,0);
-  }
-  .wrap{max-width:680px;margin:0 auto;padding:32px 0 56px}
-  header{margin-bottom:24px;padding-left:18px;border-left:6px solid var(--mark)}
-  h1{font-family:"Noto Serif Sinhala",serif;font-size:clamp(1.6rem,5vw,2.2rem);line-height:1.35;margin:0 0 6px}
-  header p{margin:0;color:var(--muted)}
-  fieldset{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:18px 20px 20px;margin:0 0 20px;min-width:0}
-  legend{font-weight:700;padding:0 8px;color:var(--accent)}
-  .field{margin-bottom:16px}
-  .field:last-child{margin-bottom:0}
-  label.t,.q{display:block;font-weight:500;margin-bottom:6px}
-  .q small{color:var(--muted);font-weight:400}
-  input[type=text],input[type=tel],select{
-    width:100%;font:inherit;color:inherit;background:var(--bg);
-    border:1px solid var(--line);border-radius:8px;padding:10px 12px;
-  }
-  :focus-visible{outline:3px solid var(--mark);outline-offset:2px}
-  .opts{display:flex;flex-direction:column;gap:6px}
-  .opt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:var(--bg)}
-  .opt:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
-  .opt input{margin-top:6px;accent-color:var(--accent);width:18px;height:18px;flex:none}
-  .hint{color:var(--muted);font-size:.85rem;margin-top:4px}
-  .error{color:var(--err);font-size:.88rem;margin-top:4px;display:none}
-  .field.bad .error{display:block}
-  .field.bad input[type=text],.field.bad input[type=tel],.field.bad select{border-color:var(--err)}
-  button{
-    width:100%;font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer;
-    background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:14px;
-  }
-  button:disabled{opacity:.6;cursor:wait}
-  .hp{position:absolute;left:-9999px;height:0;overflow:hidden}
-  #status{margin-top:16px;padding:14px 16px;border-radius:10px;display:none;font-weight:500}
-  #status.ok{display:block;background:color-mix(in srgb,var(--ok) 16%,var(--surface));color:var(--ok);border:1px solid var(--ok)}
-  #status.fail{display:block;background:color-mix(in srgb,var(--err) 12%,var(--surface));color:var(--err);border:1px solid var(--err)}
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1d2330;--mut:#6b7280;--bd:#e3e6ec;--ac:#0f766e;--ac2:#ccfbf1}
+@media(prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b1f27;--tx:#e8eaf0;--mut:#9aa3b2;--bd:#2d333f;--ac:#2dd4bf;--ac2:#134e4a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Iskoola Pota","Noto Sans Sinhala","Nirmala UI",system-ui,sans-serif;font-size:16px}
+.wrap{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+h1{font-size:22px;margin:0 0 12px}
+label{display:block;margin:12px 0 4px;font-weight:600}
+input[type=text],input[type=tel],select{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:10px;font:inherit}
+input:disabled,select:disabled{opacity:.6}
+.chk{display:flex;gap:8px;align-items:center;font-weight:400;margin:6px 0}
+button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:11px 16px;font:inherit;cursor:pointer}
+@media(prefers-color-scheme:dark){button{color:#06201d}}
+button.sec{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+#err{color:#b91c1c;margin-top:10px}
+.mem{background:var(--ac2);border-radius:10px;padding:14px;text-align:center;margin:12px 0}
+.mem b{font-size:32px;letter-spacing:2px;display:block}
+.ov{display:none;position:fixed;inset:0;background:#0009;z-index:9;padding:16px;overflow:auto}
+.ov .card{max-width:440px;margin:60px auto}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#rcpt{position:absolute;left:-9999px;top:0;width:720px;padding:36px;background:#fff;color:#111;font-family:"Iskoola Pota","Noto Sans Sinhala","Nirmala UI",sans-serif;font-size:18px}
+#rcpt table{width:100%;border-collapse:collapse;margin-top:14px}
+#rcpt td{padding:8px 6px;border-bottom:1px solid #ddd;vertical-align:top}
+#rcpt td:first-child{width:42%;color:#555}
 </style>
 </head>
 <body>
-<main class="wrap">
-  <header>
-    <h1>ඉතිහාස ගුරු වැඩසටහන<br>ලියාපදිංචි වන්න</h1>
-    <p>පහත තොරතුරු පිරවීමට විනාඩි 2ක් පමණ ගත වේ. සියලු ප්‍රශ්න අනිවාර්යයි.</p>
-  </header>
+<div class="wrap">
 
-  <form id="form" novalidate>
-    <fieldset>
-      <legend>පෞද්ගලික තොරතුරු</legend>
-      <div class="field" data-for="full_name">
-        <label class="t" for="full_name">නම</label>
-        <input type="text" id="full_name" name="full_name" autocomplete="name" maxlength="120">
-        <div class="error">කරුණාකර ඔබගේ නම ඇතුළත් කරන්න.</div>
-      </div>
-      <div class="field" data-for="whatsapp_number">
-        <label class="t" for="whatsapp_number">Whatsapp අංකය</label>
-        <input type="tel" id="whatsapp_number" name="whatsapp_number" inputmode="tel" autocomplete="tel" placeholder="07XXXXXXXX" maxlength="16">
-        <div class="hint">උදා: 0771234567 හෝ +94771234567</div>
-        <div class="error">නිවැරදි Whatsapp අංකයක් ඇතුළත් කරන්න.</div>
-      </div>
-      <div class="field" data-for="district">
-        <label class="t" for="district">පදිංචි දිස්ත්‍රික්කය</label>
-        <select id="district" name="district"><option value="">තෝරන්න</option></select>
-        <div class="error">කරුණාකර දිස්ත්‍රික්කය තෝරන්න.</div>
-      </div>
-    </fieldset>
+<div class="card" id="formCard">
+<h1 id="ttl">ලියාපදිංචි වන්න</h1>
+<div id="editNote" class="mem" style="display:none">සංස්කරණය කරන සාමාජික අංකය<b id="editNo"></b></div>
+<div id="form">
+<label>සම්පූර්ණ නම</label><input type="text" id="full_name" maxlength="120">
+<label>WhatsApp අංකය</label><input type="tel" id="whatsapp_number" placeholder="07XXXXXXXX" inputmode="tel">
+<div id="sel"></div>
+<label>ඔබ භාවිතා කරන උපාංග (එකක් හෝ කිහිපයක්)</label>
+<div id="devs"></div>
+<label class="chk" style="margin-top:14px"><input type="checkbox" id="future_consent"> අනාගතයේ දී මා හා සම්බන්ධ වීමට එකඟයි</label>
+<div id="err"></div>
+<div class="row"><button id="go" onclick="submitForm()">ඉදිරිපත් කරන්න</button><button class="sec" id="cancelEdit" style="display:none" onclick="location.reload()">අවලංගු කරන්න</button></div>
+</div>
+</div>
 
-    <fieldset>
-      <legend>ඔබ පිළිබඳ</legend>
-      <div id="radios"></div>
-      <div class="field" data-for="devices">
-        <span class="q">භාවිත කරන තාක්ෂණික උපාංග <small>(කිහිපයක් තෝරාගත හැක)</small></span>
-        <div class="opts" id="devices"></div>
-        <div class="error">අවම වශයෙන් එක් උපාංගයක් තෝරන්න.</div>
-      </div>
-    </fieldset>
+<div class="card" id="okCard" style="display:none">
+<h1 id="okTtl">ලියාපදිංචිය සාර්ථකයි ✔</h1>
+<div class="mem">ඔබගේ සාමාජික අංකය<b id="okNo"></b></div>
+<p>තොරතුරු ඇතුළත් PDF ලේඛනය ඔබේ උපාංගයට බාගත වේ. දත්ත සංස්කරණයට මෙම අංකය අවශ්‍ය නිසා ආරක්ෂා කර තබා ගන්න.</p>
+<div class="row"><button onclick="makePdf(last)">PDF නැවත බාගන්න</button><button class="sec" onclick="location.reload()">නව ලියාපදිංචියක්</button></div>
+</div>
+</div>
 
-    <fieldset>
-      <div class="opts">
-        <label class="opt">
-          <input type="checkbox" id="future_consent" name="future_consent">
-          <span>ගුරුවරයෙක් ලෙස තාක්ෂණික දැනුම, විෂය දැනුම වර්ධනය කරගැනීමේ මාර්ගගත නොමිලේ වැඩසටහන් සඳහා ඉදිරියේදීත් සහභාගී වීමට කැමතියි. ඒ නිසා මාගේ තොරතුරු දත්ත පද්ධතියේ ගබඩා කරගන්න.</span>
-        </label>
-      </div>
-    </fieldset>
+<div class="ov" id="dup"><div class="card">
+<h1>දැනටමත් ලියාපදිංචි වී ඇත</h1>
+<p>මෙම දිස්ත්‍රික්කයෙන් මෙම දුරකතන අංකය දැනටමත් ලියාපදිංචි වී ඇත. පැරණි දත්ත සංස්කරණය කිරීමට අවශ්‍ය ද?</p>
+<div class="row" id="dupBtns"><button onclick="askMember()">ඔව්, සංස්කරණය කරමි</button><button class="sec" onclick="closeDup()">නැත</button></div>
+<div id="memBox" style="display:none">
+<label>ඔබගේ සාමාජික අංකය</label><input type="text" id="memIn" placeholder="M-00000" autocapitalize="characters">
+<div id="memErr" style="color:#b91c1c;margin-top:8px"></div>
+<div class="row"><button onclick="verify()">තහවුරු කරන්න</button><button class="sec" onclick="closeDup()">වසන්න</button></div>
+</div>
+</div></div>
 
-    <div class="hp" aria-hidden="true"><input type="text" id="website" tabindex="-1" autocomplete="off"></div>
-    <button type="submit" id="submit">ලියාපදිංචි වන්න</button>
-    <div id="status" role="status" aria-live="polite"></div>
-  </form>
-</main>
+<div id="rcpt"></div>
 
 <script>
-/* ====== 1. Supabase සැකසුම් — ඔබගේ project අගයන් මෙතැනට දමන්න ====== */
-const SUPABASE_URL = "https://jcijglwpkfluyzrltimk.supabase.co/";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjaWpnbHdwa2ZsdXl6cmx0aW1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MzU3OTUsImV4cCI6MjA4MjQxMTc5NX0.dvT8OiyVEiYn_DhkMakmSq1Vvr4REDr0kYPnyqCtWHs";
-/* =================================================================== */
+/* ★ මෙහි ඔබේ Supabase තොරතුරු ඇතුළත් කරන්න (anon key පොදු යතුරකි) */
+const CFG={url:"https://YOUR-PROJECT.supabase.co",key:"YOUR_ANON_KEY"};
+const sb=supabase.createClient(CFG.url,CFG.key);
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const LVL=["ඉහළයි","මධ්‍යස්ථයි","අඩුයි"];
+const FIELDS=[
+["district","දිස්ත්‍රික්කය",["කොළඹ","ගම්පහ","කළුතර","මහනුවර","මාතලේ","නුවරඑළිය","ගාල්ල","මාතර","හම්බන්තොට","යාපනය","කිලිනොච්චි","මන්නාරම","වවුනියාව","මුලතිව්","මඩකලපුව","අම්පාර","ත්‍රිකුණාමලය","කුරුණෑගල","පුත්තලම","අනුරාධපුරය","පොලොන්නරුව","බදුල්ල","මොණරාගල","රත්නපුර","කෑගල්ල"]],
+["entry_route","ඉතිහාස ගුරු සේවයට පිවිසි මාර්ගය",["ඉතිහාසය උපාධිධාරියෙකු ලෙසිනි","විද්‍යාපීඨ ගුරුවරයෙක් ලෙසිනි","වෙනත්"]],
+["history_knowledge","ඉතිහාස විෂය දැනුම",["ඉහළ දැනුමක් තිබේ","මධ්‍යස්ථ දැනුමක් තිබේ","අඩු දැනුමක් තිබේ","කිසිදු දැනුමක් නැත"]],
+["teacher_level","ගුරු මට්ටම",["ප්‍රවීනයි","මධ්‍යමයි","ආධුනිකයි"]],
+["map_marking_skill","සිතියම් ලකුණු කිරීමේ හැකියාව",LVL],
+["map_making_tech","සිතියම් නිර්මාණ තාක්ෂණය",LVL],
+["ict_knowledge","ICT දැනුම",["ඉහළයි","මධ්‍යස්ථයි","අඩුයි","කිසිදු දැනුමක් නැත"]]];
+const DEV=["පරිගණකයක්","Tab එකක්","Smart දුරකතනය"];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let mode="new",editNo=null,last=null;
 
-const districts = ["අම්පාර","අනුරාධපුරය","බදුල්ල","මඩකලපුව","කොළඹ","ගාල්ල","ගම්පහ","හම්බන්තොට","යාපනය","කළුතර","මහනුවර","කෑගල්ල","කිලිනොච්චිය","කුරුණෑගල","මන්නාරම","මාතලේ","මාතර","මොණරාගල","මුලතිව්","නුවරඑළිය","පොළොන්නරුව","පුත්තලම","රත්නපුරය","ත්‍රිකුණාමලය","වව්නියාව"];
+$("sel").innerHTML=FIELDS.map(([k,t,o])=>`<label>${t}</label><select id="${k}"><option value="">-- තෝරන්න --</option>${o.map(v=>`<option>${esc(v)}</option>`).join("")}</select>`).join("");
+$("devs").innerHTML=DEV.map(d=>`<label class="chk"><input type="checkbox" name="dev" value="${esc(d)}"> ${esc(d)}</label>`).join("");
 
-const radioQs = [
-  {name:"entry_route", label:"ගුරුවෘත්තියට පිවිසියේ", opts:["ඉතිහාසය උපාධිධාරියෙකු ලෙසිනි","විද්‍යාපීඨ ගුරුවරයෙක් ලෙසිනි","වෙනත්"]},
-  {name:"history_knowledge", label:"ඉතිහාසය විෂය පිළිබඳ", opts:["ඉහළ දැනුමක් තිබේ","මධ්‍යස්ථ දැනුමක් තිබේ","අඩු දැනුමක් තිබේ","කිසිදු දැනුමක් නැත"]},
-  {name:"teacher_level", label:"ගුරුවරයෙකු ලෙස", opts:["ප්‍රවීනයි","මධ්‍යමයි","ආධුනිකයි"]},
-  {name:"map_marking_skill", label:"සිතියම් ලකුණු කිරීම පිළිබඳ දැනුම", opts:["ඉහළයි","මධ්‍යස්ථයි","අඩුයි"]},
-  {name:"map_making_tech", label:"සිතියම් සැකසීම පිළිබඳ තාක්ෂණික දැනුම", opts:["ඉහළයි","මධ්‍යස්ථයි","අඩුයි"]},
-  {name:"ict_knowledge", label:"පරිගණක හා තොරතුරු තාක්ෂණ දැනුම", opts:["ඉහළයි","මධ්‍යස්ථයි","අඩුයි","කිසිදු දැනුමක් නැත"]},
-];
-const deviceOpts = [["පරිගණකයක්","පරිගණකයක් භාවිත කරමි"],["Tab එකක්","Tab එකක් භාවිත කරමි"],["Smart දුරකතනය","Smart දුරකතනය භාවිත කරමි"]];
-
-const $ = s => document.querySelector(s);
-
-// ----- ආකෘතිය ගොඩනැගීම -----
-$("#district").insertAdjacentHTML("beforeend", districts.map(d=>`<option>${d}</option>`).join(""));
-
-$("#radios").innerHTML = radioQs.map(q => `
-  <div class="field" data-for="${q.name}">
-    <span class="q">${q.label} <small>(එක් පිළිතුරක් පමණි)</small></span>
-    <div class="opts">${q.opts.map(o=>`
-      <label class="opt"><input type="radio" name="${q.name}" value="${o}"><span>${o}</span></label>`).join("")}
-    </div>
-    <div class="error">කරුණාකර පිළිතුරක් තෝරන්න.</div>
-  </div>`).join("");
-
-$("#devices").innerHTML = deviceOpts.map(([v,l]) =>
-  `<label class="opt"><input type="checkbox" name="devices" value="${v}"><span>${l}</span></label>`).join("");
-
-// ----- වලංගු කිරීම -----
-function normalizePhone(raw){
-  let p = raw.replace(/[\s\-()]/g,"");
-  if (/^0\d{9}$/.test(p)) p = "+94" + p.slice(1);       // 07XXXXXXXX -> +947XXXXXXXX
-  else if (/^94\d{9}$/.test(p)) p = "+" + p;
-  return p;
-}
-function setBad(name, bad){
-  document.querySelector(`[data-for="${name}"]`).classList.toggle("bad", bad);
-  return bad;
+function collect(){
+ const p={full_name:$("full_name").value.trim(),whatsapp_number:$("whatsapp_number").value.trim().replace(/[\s-]/g,""),
+  devices:[...document.querySelectorAll("[name=dev]:checked")].map(x=>x.value),future_consent:$("future_consent").checked};
+ FIELDS.forEach(([k])=>p[k]=$(k).value);
+ let e="";
+ if(p.full_name.length<2||p.full_name.length>120)e="නම අකුරු 2–120 අතර විය යුතුය.";
+ else if(!/^\+?[0-9]{9,15}$/.test(p.whatsapp_number))e="WhatsApp අංකය වලංගු නොවේ (ඉලක්කම් 9–15).";
+ else if(FIELDS.some(([k])=>!p[k]))e="සියලු ප්‍රශ්න සඳහා පිළිතුරු තෝරන්න.";
+ else if(!p.devices.length)e="අවම වශයෙන් එක් උපාංගයක් තෝරන්න.";
+ $("err").textContent=e;return e?null:p;
 }
 
-const form = $("#form"), statusBox = $("#status"), btn = $("#submit");
-
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  statusBox.className = ""; statusBox.textContent = "";
-  if ($("#website").value) return;                       // bot trap
-
-  const name = $("#full_name").value.trim();
-  const phone = normalizePhone($("#whatsapp_number").value);
-  const district = $("#district").value;
-  const devices = [...form.querySelectorAll('input[name="devices"]:checked')].map(i=>i.value);
-
-  let invalid = false;
-  invalid = setBad("full_name", name.length < 2) || invalid;
-  invalid = setBad("whatsapp_number", !/^\+?[0-9]{9,15}$/.test(phone)) || invalid;
-  invalid = setBad("district", !district) || invalid;
-
-  const row = {full_name:name, whatsapp_number:phone, district, devices,
-               future_consent: $("#future_consent").checked};
-  for (const q of radioQs){
-    const sel = form.querySelector(`input[name="${q.name}"]:checked`);
-    row[q.name] = sel ? sel.value : null;
-    invalid = setBad(q.name, !sel) || invalid;
+async function submitForm(){
+ const p=collect();if(!p)return;
+ $("go").disabled=true;
+ try{
+  if(mode==="new"){
+   const {data,error}=await sb.rpc("register_member",{p});if(error)throw error;
+   if(data.status==="duplicate"){$("dup").style.display="block";return}
+   done(data.row,false);
+  }else{
+   const {data,error}=await sb.rpc("update_registration",{p_member:editNo,p});if(error)throw error;
+   if(data.status!=="ok")throw new Error("දත්ත යාවත්කාලීන කළ නොහැකි විය.");
+   done(data.row,true);
   }
-  invalid = setBad("devices", devices.length === 0) || invalid;
+ }catch(e){$("err").textContent="දෝෂයක්: "+(e.message||e)}
+ finally{$("go").disabled=false}
+}
 
-  if (invalid){
-    document.querySelector(".bad")?.scrollIntoView({behavior:"smooth", block:"center"});
-    return;
-  }
+function closeDup(){$("dup").style.display="none";$("memBox").style.display="none";$("dupBtns").style.display="flex"}
+function askMember(){$("dupBtns").style.display="none";$("memBox").style.display="block";$("memIn").focus()}
+async function verify(){
+ $("memErr").textContent="";
+ const m=$("memIn").value.trim();if(!m){$("memErr").textContent="සාමාජික අංකය ඇතුළත් කරන්න.";return}
+ try{
+  const {data,error}=await sb.rpc("get_registration",{p_district:$("district").value,p_phone:$("whatsapp_number").value,p_member:m});
+  if(error)throw error;
+  if(!data){$("memErr").textContent="සාමාජික අංකය ගැළපෙන්නේ නැත. නැවත පරීක්ෂා කරන්න.";return}
+  mode="edit";editNo=data.member_no;
+  $("full_name").value=data.full_name;
+  FIELDS.forEach(([k])=>$(k).value=data[k]);
+  document.querySelectorAll("[name=dev]").forEach(c=>c.checked=data.devices.includes(c.value));
+  $("future_consent").checked=data.future_consent;
+  $("district").disabled=true;$("whatsapp_number").disabled=true;
+  $("ttl").textContent="දත්ත සංස්කරණය";$("go").textContent="යාවත්කාලීන කරන්න";
+  $("editNo").textContent=editNo;$("editNote").style.display="block";$("cancelEdit").style.display="inline-block";
+  closeDup();window.scrollTo(0,0);
+ }catch(e){$("memErr").textContent="දෝෂයක්: "+(e.message||e)}
+}
 
-  btn.disabled = true; btn.textContent = "යවමින්...";
-  const { error } = await db.from("registrations").insert(row);   // anon: insert පමණයි
-  btn.disabled = false; btn.textContent = "ලියාපදිංචි වන්න";
+function done(row,updated){
+ last=row;$("formCard").style.display="none";$("okCard").style.display="block";
+ $("okTtl").textContent=updated?"දත්ත යාවත්කාලීන කළා ✔":"ලියාපදිංචිය සාර්ථකයි ✔";
+ $("okNo").textContent=row.member_no;window.scrollTo(0,0);makePdf(row);
+}
 
-  if (!error){
-    form.reset();
-    statusBox.className = "ok";
-    statusBox.textContent = "ස්තූතියි! ඔබගේ ලියාපදිංචිය සාර්ථකව සම්පූර්ණ විය.";
-    statusBox.scrollIntoView({behavior:"smooth", block:"center"});
-  } else if (error.code === "23505"){
-    statusBox.className = "fail";
-    statusBox.textContent = "මෙම Whatsapp අංකය දැනටමත් ලියාපදිංචි වී ඇත.";
-  } else {
-    console.error(error);
-    statusBox.className = "fail";
-    statusBox.textContent = "ලියාපදිංචි කිරීම අසාර්ථක විය. කරුණාකර නැවත උත්සාහ කරන්න.";
-  }
-});
+async function makePdf(r){
+ const rows=[["සාමාජික අංකය",r.member_no],["නම",r.full_name],["WhatsApp අංකය",r.whatsapp_number],["දිස්ත්‍රික්කය",r.district],["පිවිසි මාර්ගය",r.entry_route],["ඉතිහාස දැනුම",r.history_knowledge],["ගුරු මට්ටම",r.teacher_level],["සිතියම් ලකුණු කිරීම",r.map_marking_skill],["සිතියම් නිර්මාණ තාක්ෂණය",r.map_making_tech],["ICT දැනුම",r.ict_knowledge],["උපාංග",r.devices.join(", ")],["අනාගත සම්බන්ධතාවට එකඟතාව",r.future_consent?"ඔව්":"නැත"],["ලියාපදිංචි වූ දිනය",new Date(r.created_at).toLocaleString("si-LK",{dateStyle:"long",timeStyle:"short"})]];
+ $("rcpt").innerHTML=`<h1 style="margin:0;font-size:26px">ලියාපදිංචි තහවුරු කිරීම</h1>
+ <div style="background:#ccfbf1;border-radius:10px;padding:16px;text-align:center;margin-top:16px;color:#064e48">සාමාජික අංකය<div style="font-size:40px;font-weight:700;letter-spacing:3px">${esc(r.member_no)}</div></div>
+ <table>${rows.slice(1).map(([a,b])=>`<tr><td>${a}</td><td>${esc(b)}</td></tr>`).join("")}</table>
+ <p style="margin-top:20px;color:#555;font-size:15px">දත්ත සංස්කරණය කිරීමේ දී මෙම සාමාජික අංකය අවශ්‍ය වේ. කරුණාකර ආරක්ෂා කර තබා ගන්න.</p>`;
+ try{
+  if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+  const cv=await html2canvas($("rcpt"),{scale:2,backgroundColor:"#fff"});
+  const pdf=new window.jspdf.jsPDF("p","mm","a4"),w=190,h=cv.height*w/cv.width;
+  pdf.addImage(cv.toDataURL("image/png"),"PNG",10,10,w,h);
+  pdf.save("member-"+r.member_no+".pdf");
+ }catch(e){alert("PDF සෑදීමට නොහැකි විය: "+e.message)}
+}
 </script>
 </body>
 </html>
